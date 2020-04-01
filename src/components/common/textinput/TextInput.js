@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import React from "react";
 export default function TextInput({ id, label, name, onChange, type }) {
   return (
-    <Grid item xs={12} sm={6}>
+    <Grid item xs={30} sm={30}>
       <TextField
         variant="outlined"
         required

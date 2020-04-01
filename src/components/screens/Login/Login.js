@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,6 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
+import app from "../../../FireBase";
+import { AuthContext } from "../../../Auth.js";
+import { withRouter, Redirect } from "react-router";
 
 function Copyright() {
   return (
@@ -25,44 +28,30 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: 30,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  card: {
-    backgroundColor: "#ffffff",
-    borderRadius: 30,
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-    borderRadius: 30
-  },
-  text: {
-    fontWeight: "bold"
-  }
-}));
 const onSubmit = () => {
   this.props.history.push("/register");
 };
-export default function Register({ history }) {
+function Login({ history }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const classes = useStyles();
+  function handleLogin() {
+    try {
+      app
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(data => console.log(data.code));
+      history.push("/");
+    } catch (error) {
+      alert(error);
+    }
+  }
 
+  const { currentUser } = useContext(AuthContext);
+
+  if (currentUser) {
+    return <Redirect to="/" />;
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -86,6 +75,7 @@ export default function Register({ history }) {
                   name="email"
                   autoComplete="email"
                   type="email"
+                  onChange={text => setEmail(text.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -98,6 +88,7 @@ export default function Register({ history }) {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onChange={text => setPassword(text.target.value)}
                 />
               </Grid>
             </Grid>
@@ -107,9 +98,11 @@ export default function Register({ history }) {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={() => history.push("/marketplace")}
+              onClick={() => handleLogin()}
             >
-              <text className={classes.text}>Sign In</text>
+              <text className={classes.text}>
+                {email}+{password}
+              </text>
             </Button>
             <Grid container justify="center">
               <Grid item>
@@ -131,3 +124,35 @@ export default function Register({ history }) {
     </Container>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 30,
+    justifyContent: "center"
+  },
+  card: {
+    backgroundColor: "#ffffff",
+    borderRadius: 30,
+    alignItems: "center"
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    borderRadius: 30
+  },
+  text: {
+    fontWeight: "bold"
+  }
+}));
+export default withRouter(Login);

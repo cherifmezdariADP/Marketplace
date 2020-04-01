@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -32,9 +30,9 @@ function displayError(error) {
 }
 export default function Register({ history }) {
   const classes = useStyles();
-  const [email, setEmail] = useState("deded");
+  const [email, setEmail] = useState("");
   const [emailValidate, setEmailValidate] = useState(true);
-  const [password, setPassword] = useState(true);
+  const [password, setPassword] = useState("");
   const [passwordValidate, setPasswordValidate] = useState(true);
   const [error, setError] = useState(true);
 
@@ -62,7 +60,7 @@ export default function Register({ history }) {
     }
   }
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" justify="center">
       <CssBaseline />
 
       <div className={classes.paper}>
@@ -153,7 +151,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center"
   },
   avatar: {
     margin: theme.spacing(1),
